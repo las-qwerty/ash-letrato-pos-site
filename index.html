@@ -153,6 +153,40 @@
   footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 26px 0 44px; text-align: center; color: var(--faint); font-size: 12.5px; }
   footer b { font-family: 'Anton', Impact, sans-serif; letter-spacing: .08em; color: var(--muted); font-weight: 400; }
 
+  /* ---------- screenshot carousel ---------- */
+  .shot-frame {
+    position: relative; background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; overflow: hidden;
+    box-shadow: 0 30px 60px -24px rgba(0,0,0,.6);
+  }
+  .shot-img { display: block; width: 100%; aspect-ratio: 1440 / 900; object-fit: cover; object-position: top; }
+  .shot-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line-2);
+    background: rgba(14,16,21,.75); backdrop-filter: blur(8px);
+    color: var(--text); cursor: pointer; font-size: 20px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s;
+  }
+  .shot-nav:hover { background: rgba(14,16,21,.92); border-color: var(--faint); }
+  .shot-nav.prev { left: 12px; }
+  .shot-nav.next { right: 12px; }
+  .shot-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+  .shot-cap { font-size: 14px; }
+  .shot-cap b { font-weight: 600; }
+  .shot-cap span { color: var(--faint); margin-left: 10px; font-size: 12.5px; }
+  .shot-idx { color: var(--faint); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+  .shot-rail { display: flex; gap: 8px; margin-top: 14px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
+  .shot-rail button {
+    flex: 0 0 108px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+    padding: 0; cursor: pointer; background: var(--card); opacity: .55;
+    transition: opacity .15s, border-color .15s;
+  }
+  .shot-rail button img { display: block; width: 100%; aspect-ratio: 1440/900; object-fit: cover; object-position: top; }
+  .shot-rail button:hover { opacity: .85; }
+  .shot-rail button.on { opacity: 1; border-color: var(--fire); }
+  @media (max-width: 640px) { .shot-rail { display: none; } }
+
   /* subtle one-time fade for sections */
   .reveal { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
   .reveal.in { opacity: 1; transform: none; }
@@ -202,6 +236,25 @@
 </header>
 
 <main class="wrap">
+
+  <section id="screens">
+    <div class="sec-head reveal">
+      <h2>See it working</h2>
+      <p>Every screen below is the actual app — no mockups.</p>
+    </div>
+    <div class="reveal">
+      <div class="shot-frame">
+        <img class="shot-img" id="shot-img" src="screenshots/pos.png" alt="ASH LETRATO POS — Point of Sale" />
+        <button class="shot-nav prev" id="shot-prev" aria-label="Previous screen">‹</button>
+        <button class="shot-nav next" id="shot-next" aria-label="Next screen">›</button>
+      </div>
+      <div class="shot-bar">
+        <p class="shot-cap"><b id="shot-cap">Point of Sale</b><span id="shot-desc">Touch catalog, cart, camera barcode scanning, discounts, and payment in one view</span></p>
+        <span class="shot-idx" id="shot-idx">1 / 14</span>
+      </div>
+      <div class="shot-rail" id="shot-rail" aria-label="Jump to a screen"></div>
+    </div>
+  </section>
 
   <section id="download">
     <div class="sec-head reveal">
@@ -442,6 +495,84 @@
     setTimeout(next, reduced ? 0 : 800);
   }
   runReceipt();
+
+  /* ---------- screenshot carousel ---------- */
+  var SHOTS = [
+    ['pos', 'Point of Sale', 'Touch catalog, cart, camera barcode scanning, discounts, and payment in one view'],
+    ['dashboard', 'Dashboard', 'Live sales chart, top products, low stock — the morning pulse check'],
+    ['sales', 'Transactions', 'Every sale, void and refund with receipts and an audit trail'],
+    ['products', 'Products', 'Sellable goods with stock counts, barcodes, and category grouping'],
+    ['services', 'Services', 'Area-priced print work — tarpaulins, vinyl, blueprints'],
+    ['production', 'Production', 'Job tickets, machine counters, and end-of-shift reconciliation'],
+    ['inventory', 'Inventory', 'Per-branch stock, transfers, counts, and a movement ledger'],
+    ['customers', 'Customers', 'Loyalty tiers, points, senior/PWD discounts, purchase history'],
+    ['promotions', 'Promotions', 'Percent-off, peso-off, and buy-X-get-Y codes with usage limits'],
+    ['reports', 'Reports', 'Period comparisons, per-branch performance, Excel export, audit log'],
+    ['users', 'Staff & Roles', 'Owner, manager, cashier, handler — each with a branch and a PIN'],
+    ['hr', 'HR & Payroll', 'Attendance, leave, payslips, and an approval workflow'],
+    ['branches', 'Branches', 'Each location gets its own logins, stock, and sales ledger'],
+    ['settings', 'Settings', 'Receipt header, tax rates, loyalty rules, backup & restore']
+  ];
+  var shotImg = document.getElementById('shot-img');
+  var shotCap = document.getElementById('shot-cap');
+  var shotDesc = document.getElementById('shot-desc');
+  var shotIdx = document.getElementById('shot-idx');
+  var rail = document.getElementById('shot-rail');
+  var cur = 0, timer = null;
+
+  SHOTS.forEach(function (s, i) {
+    var b = document.createElement('button');
+    b.setAttribute('aria-label', s[1]);
+    var im = document.createElement('img');
+    im.src = 'screenshots/' + s[0] + '.png';
+    im.alt = '';
+    im.loading = 'lazy';
+    b.appendChild(im);
+    b.addEventListener('click', function () { go(i); restart(); });
+    rail.appendChild(b);
+  });
+  var thumbs = rail.children;
+
+  // Preload neighbours so stepping never flashes.
+  SHOTS.forEach(function (s) { var i = new Image(); i.src = 'screenshots/' + s[0] + '.png'; });
+
+  function go(n) {
+    cur = (n + SHOTS.length) % SHOTS.length;
+    var s = SHOTS[cur];
+    shotImg.src = 'screenshots/' + s[0] + '.png';
+    shotImg.alt = 'ASH LETRATO POS — ' + s[1];
+    shotCap.textContent = s[1];
+    shotDesc.textContent = s[2];
+    shotIdx.textContent = (cur + 1) + ' / ' + SHOTS.length;
+    for (var i = 0; i < thumbs.length; i++) thumbs[i].classList.toggle('on', i === cur);
+    if (thumbs[cur]) thumbs[cur].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+  }
+
+  function restart() {
+    if (timer) clearInterval(timer);
+    // Auto-advance — paused for reduced-motion users, and while hovering.
+    if (!reduced) timer = setInterval(function () { go(cur + 1); }, 4500);
+  }
+
+  document.getElementById('shot-prev').addEventListener('click', function () { go(cur - 1); restart(); });
+  document.getElementById('shot-next').addEventListener('click', function () { go(cur + 1); restart(); });
+  var frame = document.querySelector('.shot-frame');
+  frame.addEventListener('mouseenter', function () { if (timer) clearInterval(timer); });
+  frame.addEventListener('mouseleave', restart);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') { go(cur - 1); restart(); }
+    if (e.key === 'ArrowRight') { go(cur + 1); restart(); }
+  });
+  // Touch swipe
+  var touchX = null;
+  frame.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+  frame.addEventListener('touchend', function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) { go(dx < 0 ? cur + 1 : cur - 1); restart(); }
+    touchX = null;
+  }, { passive: true });
+  go(0); restart();
 })();
 </script>
 </body>
