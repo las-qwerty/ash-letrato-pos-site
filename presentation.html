@@ -388,56 +388,74 @@
   /* ---------- talk track — what to say on each slide ---------- */
   var NOTES = [
     // 1 — Title
-    ['<p>Thanks for making time — I\'ll keep this practical. This is ASH LETRATO POS: the whole shop running on devices you already have — a tablet at the counter, a PC in the office, a phone in your pocket.</p>',
-     '<p>Everything you\'re about to see is the real working app, not mockups. And the big thing up front: it works completely offline. Brownout, spotty wifi — the till keeps selling.</p>',
-     '<p><em>Ask before moving on:</em> "Quick question before I dive in — how are you ringing up sales today, and what\'s the most annoying part of it?"</p>'],
+    ['<p>Thanks for making time — I\'ll keep this practical and you\'ll see the real working app the whole way through, not slides of mockups.</p>',
+     '<p>This is ASH LETRATO POS — point of sale, production tracking, inventory, staff, payroll and reports in one system. It runs on what you already own: a tablet at the counter, a PC in the office, a phone in your pocket. Android app, Windows installer, iPhone/iPad app — same system, same data format.</p>',
+     '<p>Three things to hold onto through the demo: <strong>it works fully offline</strong> — brownout or dead wifi, the till keeps selling. <strong>It\'s built for a print shop</strong> — services priced per square foot, per page, per set, not just canned goods. And <strong>every action has a name on it</strong> — nothing happens anonymously.</p>',
+     '<p><em>Ask before moving on:</em> "Quick one before I dive in — how are you ringing up sales today, and what\'s the most annoying part of it?" — then refer back to their answer at the relevant slide.</p>'],
     // 2 — POS
-    ['<p>This is the register your staff will actually touch, a hundred times a day. Notice it\'s built for fingers, not a mouse — big tiles, big buttons.</p>',
-     '<p>A tarpaulin order: tap the service, type the width and height, price computes itself per square foot. Barcode items scan with the tablet camera — no scanner hardware to buy.</p>',
-     '<p>Cash, GCash, Maya, card — and senior/PWD discounts apply automatically and legally. Then when your staff walk away, the till locks itself and needs their PIN to reopen.</p>'],
+    ['<p>This is the screen your staff will touch a hundred times a day, so it\'s designed for fingers: big product tiles, big buttons, everything reachable with a thumb on a tablet held at the counter.</p>',
+     '<p>Selling a service: tap Tarpaulin, type width and height — say 4 by 6 feet — and the price computes itself at your per-square-foot rate. No calculator, no price chart taped to the wall. Photocopying works the same way per page; ID packages per set.</p>',
+     '<p>For barcoded goods — mugs, shirts, packaged items — the tablet\'s camera is the scanner. No extra hardware to buy. Scan and it lands in the cart.</p>',
+     '<p>At payment: cash with automatic change computation and quick-tap bill amounts, plus GCash, Maya and card. Discounts — senior, PWD, promo codes — apply here with the correct math built in.</p>',
+     '<p>And when staff step away, the register locks itself after a set time and needs that person\'s PIN to reopen — so the till is never left open under someone else\'s name.</p>'],
     // 3 — Dashboard
-    ['<p>This is what you check with your morning coffee. Today\'s sales so far, the week\'s trend line, what\'s actually selling, and what\'s about to run out of stock.</p>',
-     '<p>Everything here is live — ring a sale on the next screen and this chart moves. No exporting, no waiting for end-of-day.</p>'],
+    ['<p>This is what you check with morning coffee: today\'s revenue, transaction count and average ticket; the last seven days as a trend line so you see direction at a glance; your top products ranked; and anything running low on stock — all on one screen.</p>',
+     '<p>Everything here is live — ring a sale at the register and this chart moves. There\'s no end-of-day report to wait for, nothing to export first.</p>',
+     '<p>And it\'s branch-aware: if you have three locations, the owner flips between branches or sees all of them at once, while a branch manager only ever sees their own shop\'s numbers.</p>',
+     '<p><em>If they ask "is this real data?"</em> — yes, everything in this demo is the actual app running, and the numbers update as transactions happen.</p>'],
     // 4 — Transactions
-    ['<p>Every sale ever made, searchable. Customer disputes a charge? Pull up the invoice and reshow the exact receipt in seconds.</p>',
-     '<p>And the important part for an owner: a cashier can\'t void or refund alone. It demands a supervisor PIN, and the record shows exactly who approved it — that\'s where register leakage gets stopped.</p>'],
+    ['<p>Every sale ever made — searchable by invoice number, customer, cashier, date. Customer disputes a charge from last Tuesday? Pull the invoice, the exact receipt reappears, reshow or reprint it in seconds.</p>',
+     '<p>Now the part that protects you: a cashier cannot void or refund a sale alone. The app demands a supervisor\'s PIN on the spot, and the transaction record permanently shows who approved it and why. That\'s the classic way register money leaks — fake voids — and it\'s closed off.</p>',
+     '<p>When a refund does happen, it\'s complete: the stock goes back on the shelf, materials are restored to inventory, the customer\'s loyalty points come back, and the audit trail records the whole thing. A voided sale can\'t be refunded a second time — the system won\'t allow the double-count.</p>'],
     // 5 — Products
-    ['<p>Sellable goods — mugs, shirts, totes — with real stock counts and photos. Each one can carry a barcode for camera scanning.</p>',
-     '<p>Products can also be wired to consume materials when they sell, so inventory updates itself. More on that in a minute.</p>'],
+    ['<p>Your sellable goods — mugs, shirts, tote bags, supplies — each with photo, price, barcode, and a real stock count that decrements as items sell.</p>',
+     '<p>Two details worth noting: stock is tracked per branch, so Caloocan\'s shelf count is its own; and a product can be wired to consume raw materials when it sells — sell a printed mug and the blank mug plus the vinyl come off inventory automatically.</p>',
+     '<p>Photos make the register visual — new staff find items by picture instead of memorizing a price list.</p>'],
     // 6 — Services
-    ['<p>This is where it\'s built for a print shop, not a generic store. Services price the way you actually bill — per square foot for tarpaulins and vinyl, per page for photocopying, per set for IDs.</p>',
-     '<p>Each service has a "recipe" — sell a 4×6 tarp and the vinyl and ink come off inventory automatically. You stop guessing how much material a job actually cost.</p>'],
+    ['<p>This is where the system stops being a generic store. Print shops bill by measurement, so services price the way you actually charge: per square foot for tarpaulins and vinyl stickers, per page for photocopying and printing, per set for ID packages, or flat rates where it applies.</p>',
+     '<p>The powerful part is the recipe behind each service. A tarpaulin knows it consumes X square feet of vinyl plus Y ml of ink. Ring up a 4×6 tarp and those exact materials leave inventory automatically — you stop guessing what a job actually cost in materials.</p>',
+     '<p>Change a material\'s cost or a rate and every future quote uses the new math. Your pricing logic lives in one place instead of in someone\'s head.</p>'],
     // 7 — Production
-    ['<p>Back of shop. Every machine job gets a numbered ticket — who ran it, how many, how many were damaged.</p>',
-     '<p>Here\'s the accountability piece: staff log the machine\'s counter at shift open and close, and the app reconciles it against what was actually produced. If the machine punched 200 but only 180 got sold or logged — that gap shows up, not as a rumor, as a number.</p>'],
+    ['<p>Back of shop — where the actual work happens. Every machine run gets a numbered job ticket: which service, which operator, how many produced, how many damaged, what stage it\'s in.</p>',
+     '<p>Here\'s the accountability piece that print shops usually can\'t get: staff log the machine\'s physical counter at shift open and at close. The app reconciles that against what was actually produced and sold. If the machine punched 200 impressions but only 180 are accounted for — that 20-unit gap shows up as a number on this screen, not as a rumor at month-end.</p>',
+     '<p>Damaged goods and reprints are recorded rather than quietly eaten. And correcting a count needs a documented reason plus a supervisor PIN — so the numbers stay honest.</p>'],
     // 8 — Inventory
-    ['<p>Materials — vinyl, ink, boards, PVC — tracked per branch. Caloocan\'s stock is separate from Greenhills\'.</p>',
-     '<p>Moving stock between branches is a logged transfer. Doing a physical count? Enter what\'s on the shelf and it writes the correction itself. And every single movement — receive, consume, transfer, waste — is a permanent line item.</p>'],
+    ['<p>Raw materials — vinyl rolls, ink, boards, PVC sheets, packaging — tracked per branch with live balances. Caloocan\'s stock is fully separate from Greenhills\'.</p>',
+     '<p>Four ways stock moves, all built in: receiving new supply, automatic consumption when services and products sell, logged transfers between branches, and physical stock counts — you enter what\'s actually on the shelf and the system writes the correction itself.</p>',
+     '<p>Every single movement is a permanent line in the ledger: what moved, how much, who did it, when. There\'s no "adjustments" black hole — shrinkage has to show itself somewhere.</p>'],
     // 9 — Customers
-    ['<p>Customers earn points on every peso and redeem them at the till — loyalty that actually brings people back.</p>',
-     '<p>Senior citizen and PWD discounts apply the legal rate automatically — your cashier can\'t get it wrong, and it\'s documented on the receipt for your records.</p>'],
+    ['<p>Customers get a record: contact details, purchase history, total lifetime spend — so your regulars stop being anonymous.</p>',
+     '<p>Loyalty is automatic: points accrue on every peso spent and are redeemable at the till as a discount — the reason for a customer to come back to you instead of the shop next door.</p>',
+     '<p>And the legally important one: mark a customer as senior citizen or PWD and the 20% discount plus VAT exemption applies automatically at the register — your cashier can\'t get the math wrong, and it\'s documented on the receipt for your books.</p>'],
     // 10 — Promotions
-    ['<p>Run a promo without teaching anyone the math. Percent-off, peso-off vouchers, or buy-X-get-Y — with dates, minimum spend, and usage caps so it can\'t be abused.</p>',
-     '<p>Cashier types the code, discount applies itself, and you can see exactly how many times it was used.</p>'],
+    ['<p>Run a promo without teaching anyone the math. Three kinds: percent-off, peso-off vouchers, or buy-X-get-Y bundles.</p>',
+     '<p>Each code has guardrails — valid date range, minimum spend, usage cap — so a promo can\'t be applied outside its window or abused past its budget.</p>',
+     '<p>At the till the cashier just types the code; the discount applies itself and the usage counter ticks up. After the campaign you can see exactly how many times it was used and what it cost you — so the next promo is a decision, not a guess.</p>'],
     // 11 — Reports
-    ['<p>Where the numbers turn into decisions. Any period — today, a week, a custom range — compared against the period before it, so you see direction, not just totals.</p>',
-     '<p>Branch-by-branch breakdown shows which location earns and which coasts. Everything exports to Excel for your accountant, and the audit trail underneath logs every sensitive action with a name and timestamp.</p>'],
+    ['<p>This is where the numbers turn into decisions. Pick any period — today, last week, a custom range — and it\'s compared against the period before it, so you see whether you\'re trending up or down, not just a static total.</p>',
+     '<p>Breakdowns by branch show which location earns and which coasts; top products and services show what to push; payment-method totals show how customers actually pay.</p>',
+     '<p>Everything exports to Excel in one click — that\'s what your accountant gets at month-end, no re-typing. And underneath the charts sits the audit log: every void, refund, discount override, price change and PIN-verified action with a name and timestamp. When something looks off, this is where the answer lives.</p>'],
     // 12 — Staff & Roles
-    ['<p>Four roles: owner, manager, cashier, handler. Each one only sees what their job needs — a cashier can\'t wander into payroll, a handler can\'t see the books.</p>',
-     '<p>Each staff login is bound to their branch — a Caloocan cashier literally cannot see Greenhills\' numbers. And PINs are throttled: five wrong attempts and that account locks out progressively.</p>'],
+    ['<p>Four roles, and they\'re enforced — not just hidden menus. The owner sees everything. A manager runs the floor but can\'t touch payroll or system settings. A cashier gets the register, transactions and customers — nothing else. A handler gets the register and production — for staff who run machines but don\'t need the books.</p>',
+     '<p>Here\'s the key for multi-branch owners: every staff login is bound to their branch. A Caloocan cashier literally cannot see Greenhills\' sales — typing the URL doesn\'t work, the route itself refuses them. Only the owner flips between locations.</p>',
+     '<p>Security details: PINs are brute-force protected — five wrong attempts locks the account progressively up to fifteen minutes, and that lockout survives closing and reopening the app. Supervisory actions like voids and refunds always demand a supervisor\'s own PIN, on the record.</p>'],
     // 13 — HR & Payroll
-    ['<p>The same staff list that runs the register runs payroll — no second system, no double entry.</p>',
-     '<p>Staff clock in and out at the till. Payroll computes from actual attendance — monthly, daily, or hourly rates plus overtime — and a run goes draft, review, approve, paid with a name on every step.</p>'],
+    ['<p>The same staff list that runs the register runs payroll — there\'s no second system and nothing gets entered twice.</p>',
+     '<p>Staff clock in and out at the till, so attendance is already data. Payroll supports monthly, daily and hourly rates plus overtime, and a pay run moves through a real workflow: draft, review, approve, mark paid — with a name on every step, so "who approved this payslip" is never a question.</p>',
+     '<p><em>If they use an external payroll provider:</em> the attendance and computed figures still export cleanly — this feeds the accountant rather than replacing them.</p>'],
     // 14 — Branches
-    ['<p>This is why it\'s not a single-store toy. Every branch gets its own logins, its own stock, its own ledger — and as the owner you flip between locations or see everything at once.</p>',
-     '<p>Open a fourth location? Add it here and it joins the system the same day — nothing to reinstall.</p>'],
+    ['<p>This is what makes it a real business system rather than a single-store toy. Every branch gets its own logins, its own inventory, its own sales ledger and its own reports — fully isolated day to day.</p>',
+     '<p>As the owner, your sidebar has a branch switcher: flip to Caloocan and every screen — dashboard, sales, stock, reports — shows Caloocan\'s world; flip to "All branches" and you see the combined picture.</p>',
+     '<p>Open a fourth location? Add it here, create its staff, transfer it some starting stock — it\'s operating the same day with nothing new to install.</p>'],
     // 15 — Settings
-    ['<p>Your business rules, not ours. Receipt header and TIN, VAT rate, discount percentages, loyalty earn rates, auto-lock timing.</p>',
-     '<p>And this matters for the future: one-click export and restore. Your data is yours — move it between devices, keep backups, or migrate it to a cloud service later without re-entering anything.</p>'],
+    ['<p>Your business rules, not ours: receipt header and TIN for compliant receipts, VAT rate, senior and PWD discount percentages, loyalty earn and redeem rates, auto-lock timing, machine list.</p>',
+     '<p>The part that matters for your future: one click exports everything — products, customers, full sales history, staff, settings — to a single file. Restore it on another device and that device is up and running. Your data is yours; there\'s no lock-in, and when you\'re ready to grow into a cloud setup later, the data moves with you instead of starting over.</p>',
+     '<p><em>If they ask "where does my data live?"</em> — on the device itself, fully private to your shop, with exports you control. Nothing is sent anywhere.</p>'],
     // 16 — Closing
-    ['<p>That\'s the whole system — register to payroll, running offline, on three platforms.</p>',
-     '<p>You can try it today: owner login is on screen, or hand the tablet to a staff member and let them try their own PIN. Everything you saw is already live in the demo.</p>',
-     '<p><em>Close with:</em> "What would you want to see working in your own shop first — the register, or the production side? We can set it up and try it with a real order right now."</p>']
+    ['<p>That\'s the whole loop: register, production floor, stockroom, back office and payroll — one system, working offline, on devices you already own.</p>',
+     '<p>It\'s live right now — owner login on screen, or hand the tablet over and let a staff member try their own PIN. Everything you saw today is the actual running system.</p>',
+     '<p>On practicalities: it installs in minutes on a tablet or PC, needs no special hardware — the camera is the barcode scanner — and updates roll out to every device automatically as the system improves.</p>',
+     '<p><em>Close with:</em> "Which part would you want running in your shop first — the register or the production tracking? We can set it up with a real order while we\'re here." — then stay quiet and let them answer.</p>']
   ];
 
   var slides = document.querySelectorAll('.slide');
