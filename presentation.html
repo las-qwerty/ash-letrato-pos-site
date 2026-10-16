@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ASH LETRATO POS — Product Walkthrough</title>
+<link rel="icon" type="image/png" href="icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0E1015; --card: #161922; --line: rgba(255,255,255,.09); --line-2: rgba(255,255,255,.16);
+    --text: #ECEDEF; --muted: #9AA0AB; --faint: #6B7078;
+    --fire: #E8492F; --blue: #6B8CFF;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text);
+    overflow: hidden;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: -1;
+    background:
+      radial-gradient(720px 420px at -10% -10%, rgba(232,73,47,.10), transparent 60%),
+      radial-gradient(720px 420px at 110% -10%, rgba(61,99,245,.10), transparent 60%);
+  }
+
+  /* ---------- deck ---------- */
+  .slide {
+    position: fixed; inset: 0; display: none;
+    flex-direction: column; padding: clamp(20px, 4vw, 56px);
+  }
+  .slide.on { display: flex; animation: in .35s ease; }
+  @keyframes in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+
+  /* ---------- title slide ---------- */
+  .center { align-items: center; justify-content: center; text-align: center; }
+  .logo-lg { width: 84px; height: 84px; border-radius: 20px; margin-bottom: 26px; }
+  h1 { font-family: 'Anton', Impact, sans-serif; font-size: clamp(40px, 7vw, 84px); letter-spacing: .03em; line-height: 1.02; }
+  h1 em { font-style: normal; color: var(--fire); }
+  .tagline { color: var(--muted); font-size: clamp(15px, 2vw, 19px); margin-top: 18px; max-width: 46ch; }
+  .meta-row { display: flex; gap: 10px; margin-top: 34px; flex-wrap: wrap; justify-content: center; }
+  .pill { border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 16px; font-size: 13px; color: var(--muted); }
+  .pill b { color: var(--text); font-weight: 600; }
+
+  /* ---------- module slides ---------- */
+  .split { flex: 1; display: grid; grid-template-columns: .85fr 1.4fr; gap: clamp(24px, 4vw, 56px); align-items: center; max-width: 1240px; margin: 0 auto; width: 100%; }
+  .k { font-size: 12px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--fire); }
+  h2 { font-family: 'Anton', Impact, sans-serif; font-size: clamp(30px, 4.2vw, 52px); letter-spacing: .03em; margin: 10px 0 16px; }
+  .pts { list-style: none; display: grid; gap: 13px; margin-top: 8px; }
+  .pts li { display: flex; gap: 12px; color: var(--muted); font-size: clamp(14px, 1.5vw, 16.5px); line-height: 1.55; }
+  .pts li::before { content: ''; flex: 0 0 7px; height: 7px; border-radius: 99px; background: var(--fire); margin-top: 9px; }
+  .pts b { color: var(--text); font-weight: 600; }
+  .shot {
+    border: 1px solid var(--line-2); border-radius: 14px; overflow: hidden;
+    box-shadow: 0 36px 70px -26px rgba(0,0,0,.65);
+  }
+  .shot img { display: block; width: 100%; }
+
+  /* ---------- closing slide ---------- */
+  .close-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; max-width: 860px; margin-top: 36px; }
+  .cc { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; font-size: 14px; color: var(--muted); }
+  .cc b { display: block; color: var(--text); font-weight: 600; margin-bottom: 4px; font-size: 15px; }
+  code { background: rgba(255,255,255,.07); padding: 2px 7px; border-radius: 5px; font-size: 12.5px; color: var(--text); }
+
+  /* ---------- chrome ---------- */
+  .hud { position: fixed; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; z-index: 10; }
+  .hud .brand { display: flex; align-items: center; gap: 9px; font-family: 'Anton'; letter-spacing: .08em; font-size: 13px; color: var(--muted); }
+  .hud .brand img { width: 22px; height: 22px; border-radius: 5px; }
+  .hud .keys { color: var(--faint); font-size: 12px; }
+  .prog { position: fixed; top: 0; left: 0; height: 3px; background: var(--fire); z-index: 11; transition: width .3s ease; }
+  .nav-zones { position: fixed; inset: 0; z-index: 5; display: flex; pointer-events: none; }
+  .nav-zones > div { flex: 1; pointer-events: auto; cursor: pointer; }
+  .counter { color: var(--faint); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 900px) {
+    .split { grid-template-columns: 1fr; gap: 18px; align-content: center; overflow-y: auto; }
+    .shot { order: -1; }
+    .slide { overflow-y: auto; }
+    .hud .keys { display: none; }
+  }
+  @media print {
+    body { overflow: visible; }
+    .slide { position: static; display: flex !important; page-break-after: always; min-height: 100vh; }
+    .hud, .nav-zones, .prog { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+<div class="nav-zones"><div id="zone-l"></div><div id="zone-r"></div></div>
+
+<!-- ============ TITLE ============ -->
+<section class="slide center on" data-title="Title">
+  <img class="logo-lg" src="icon.png" alt="ASH LETRATO logo" />
+  <h1>ASH LETRATO <em>POS</em></h1>
+  <p class="tagline">A complete point-of-sale system for a digital printing business — register, inventory, production, staff, and payroll. Runs fully offline on the devices you already own.</p>
+  <div class="meta-row">
+    <span class="pill"><b>15</b> modules</span>
+    <span class="pill"><b>3</b> platforms — Android · Windows · iOS</span>
+    <span class="pill"><b>0</b> internet required</span>
+    <span class="pill"><b>4</b> staff roles</span>
+  </div>
+</section>
+
+<!-- ============ POS ============ -->
+<section class="slide" data-title="Point of Sale">
+  <div class="split">
+    <div>
+      <p class="k">The register</p>
+      <h2>Point of Sale</h2>
+      <ul class="pts">
+        <li><p><b>Sell in two taps</b> — touch catalog organized by category, with instant search and camera barcode scanning.</p></li>
+        <li><p><b>Area pricing built in</b> — tarpaulins, vinyl and boards bill by the square foot; sizes enter at the line.</p></li>
+        <li><p><b>Every tender</b> — cash, GCash, Maya, card; discounts, loyalty redemption, and notary fees applied automatically.</p></li>
+        <li><p><b>Made for shared counters</b> — staff sign in with a 4-digit PIN and the till auto-locks when idle.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/pos.png" alt="Point of Sale screen" /></div>
+  </div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section class="slide" data-title="Dashboard">
+  <div class="split">
+    <div>
+      <p class="k">At a glance</p>
+      <h2>Dashboard</h2>
+      <ul class="pts">
+        <li><p><b>Live numbers</b> — today's sales, transactions, and a rolling 7-day chart that updates as sales happen.</p></li>
+        <li><p><b>Top products</b> — see what actually moves, ranked by revenue.</p></li>
+        <li><p><b>Low-stock alerts</b> — materials about to run out surface before they stop a job.</p></li>
+        <li><p><b>Branch-aware</b> — staff see their branch; the owner flips between locations or sees all.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/dashboard.png" alt="Dashboard screen" /></div>
+  </div>
+</section>
+
+<!-- ============ SALES ============ -->
+<section class="slide" data-title="Transactions">
+  <div class="split">
+    <div>
+      <p class="k">Every peso, accounted</p>
+      <h2>Transactions</h2>
+      <ul class="pts">
+        <li><p><b>Complete ledger</b> — every sale searchable by invoice, customer, or cashier.</p></li>
+        <li><p><b>Instant receipts</b> — reprint or reshow any receipt, any time.</p></li>
+        <li><p><b>Controlled exceptions</b> — voids and refunds need a supervisor PIN and record who approved.</p></li>
+        <li><p><b>Status clarity</b> — completed, voided, and refunded are visually distinct.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/sales.png" alt="Transactions screen" /></div>
+  </div>
+</section>
+
+<!-- ============ PRODUCTS ============ -->
+<section class="slide" data-title="Products">
+  <div class="split">
+    <div>
+      <p class="k">Sellable goods</p>
+      <h2>Products</h2>
+      <ul class="pts">
+        <li><p><b>Merch with real stock</b> — mugs, shirts, totes track units left on the shelf.</p></li>
+        <li><p><b>Barcodes &amp; photos</b> — every item can carry a code and an image for faster picking.</p></li>
+        <li><p><b>Materials linked</b> — products can consume inventory automatically at sale time.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/products.png" alt="Products screen" /></div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="slide" data-title="Services">
+  <div class="split">
+    <div>
+      <p class="k">Billed work</p>
+      <h2>Services</h2>
+      <ul class="pts">
+        <li><p><b>Priced like a print shop thinks</b> — per square foot, per page, per set — not forced into unit pricing.</p></li>
+        <li><p><b>Consumption recipes</b> — a 4×6 tarp pulls vinyl and ink from stock the moment it sells.</p></li>
+        <li><p><b>Machine-tracked work</b> — punching and bind-prep jobs flow into Production for counting.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/services.png" alt="Services screen" /></div>
+  </div>
+</section>
+
+<!-- ============ PRODUCTION ============ -->
+<section class="slide" data-title="Production">
+  <div class="split">
+    <div>
+      <p class="k">Where the work happens</p>
+      <h2>Production</h2>
+      <ul class="pts">
+        <li><p><b>Job tickets</b> — every machine run gets a scannable ticket tied to the sale that paid for it.</p></li>
+        <li><p><b>Counter reconciliation</b> — opening and closing machine readings are compared to what was actually produced.</p></li>
+        <li><p><b>Waste &amp; reprints</b> — damaged and reprocessed counts are recorded, not lost.</p></li>
+        <li><p><b>Corrections are supervised</b> — fixing a count needs a documented reason and a supervisor PIN.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/production.png" alt="Production screen" /></div>
+  </div>
+</section>
+
+<!-- ============ INVENTORY ============ -->
+<section class="slide" data-title="Inventory">
+  <div class="split">
+    <div>
+      <p class="k">Materials under control</p>
+      <h2>Inventory</h2>
+      <ul class="pts">
+        <li><p><b>Per-branch stock</b> — vinyl at Caloocan is not vinyl at Greenhills; each branch counts its own.</p></li>
+        <li><p><b>Transfers</b> — moving stock between branches is a logged, reversible operation.</p></li>
+        <li><p><b>Stock counts</b> — physical counts write corrections automatically with a movement record.</p></li>
+        <li><p><b>Movement ledger</b> — every sheet in and out is a row: who, what, why, where.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/inventory.png" alt="Inventory screen" /></div>
+  </div>
+</section>
+
+<!-- ============ CUSTOMERS ============ -->
+<section class="slide" data-title="Customers">
+  <div class="split">
+    <div>
+      <p class="k">Repeat business</p>
+      <h2>Customers</h2>
+      <ul class="pts">
+        <li><p><b>Loyalty that works</b> — points earn on every peso and redeem straight at the till.</p></li>
+        <li><p><b>Legal discounts automated</b> — senior citizen and PWD pricing applies correctly every time.</p></li>
+        <li><p><b>Tiering</b> — silver, gold, platinum levels tracked on lifetime spend.</p></li>
+        <li><p><b>History attached</b> — lifetime spend and purchase patterns on every profile.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/customers.png" alt="Customers screen" /></div>
+  </div>
+</section>
+
+<!-- ============ PROMOTIONS ============ -->
+<section class="slide" data-title="Promotions">
+  <div class="split">
+    <div>
+      <p class="k">Marketing that applies itself</p>
+      <h2>Promotions</h2>
+      <ul class="pts">
+        <li><p><b>Three kinds</b> — percent-off, peso-off vouchers, and buy-X-get-Y bundles.</p></li>
+        <li><p><b>Guardrails</b> — date windows, minimum spend, and usage limits built in.</p></li>
+        <li><p><b>Code entry at the till</b> — cashiers apply a code; the math is never manual.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/promotions.png" alt="Promotions screen" /></div>
+  </div>
+</section>
+
+<!-- ============ REPORTS ============ -->
+<section class="slide" data-title="Reports">
+  <div class="split">
+    <div>
+      <p class="k">Decisions, on evidence</p>
+      <h2>Reports</h2>
+      <ul class="pts">
+        <li><p><b>Any period</b> — today, 7 days, 30 days, or a custom range — with the previous period compared.</p></li>
+        <li><p><b>Branch breakdown</b> — see which location earns and which needs attention.</p></li>
+        <li><p><b>Payment mix</b> — cash vs e-wallet trends for reconciliation.</p></li>
+        <li><p><b>Export to Excel</b> — the whole report becomes a workbook for accounting.</p></li>
+        <li><p><b>Audit trail</b> — every sensitive action is logged with who and when.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/reports.png" alt="Reports screen" /></div>
+  </div>
+</section>
+
+<!-- ============ STAFF ============ -->
+<section class="slide" data-title="Staff & Roles">
+  <div class="split">
+    <div>
+      <p class="k">Access by design</p>
+      <h2>Staff &amp; Roles</h2>
+      <ul class="pts">
+        <li><p><b>Four roles</b> — owner, manager, cashier, handler — each sees only what they need.</p></li>
+        <li><p><b>Branch-bound logins</b> — a Caloocan cashier lives in Caloocan's books, nowhere else.</p></li>
+        <li><p><b>4-digit PINs, throttled</b> — failed attempts lock the account with escalating timeouts.</p></li>
+        <li><p><b>Delegation without risk</b> — only flagged accounts can approve voids and refunds.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/users.png" alt="Staff & Roles screen" /></div>
+  </div>
+</section>
+
+<!-- ============ HR ============ -->
+<section class="slide" data-title="HR & Payroll">
+  <div class="split">
+    <div>
+      <p class="k">People, paid right</p>
+      <h2>HR &amp; Payroll</h2>
+      <ul class="pts">
+        <li><p><b>Attendance built in</b> — clock in/out at the till; leave days are recorded and approved.</p></li>
+        <li><p><b>Payroll from real hours</b> — monthly, daily, or hourly rates plus overtime produce payslips automatically.</p></li>
+        <li><p><b>Approval workflow</b> — draft → review → approve → paid; every step is audited.</p></li>
+        <li><p><b>No second system</b> — the same staff list that runs the register runs payroll.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/hr.png" alt="HR & Payroll screen" /></div>
+  </div>
+</section>
+
+<!-- ============ BRANCHES ============ -->
+<section class="slide" data-title="Branches">
+  <div class="split">
+    <div>
+      <p class="k">Grows with you</p>
+      <h2>Branches</h2>
+      <ul class="pts">
+        <li><p><b>Multi-location by default</b> — every branch gets its own stock, sales ledger, and staff.</p></li>
+        <li><p><b>One owner view</b> — compare locations side by side or zoom into a single till.</p></li>
+        <li><p><b>Add a branch in seconds</b> — new locations join the system without redeploying anything.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/branches.png" alt="Branches screen" /></div>
+  </div>
+</section>
+
+<!-- ============ SETTINGS ============ -->
+<section class="slide" data-title="Settings">
+  <div class="split">
+    <div>
+      <p class="k">Your business rules</p>
+      <h2>Settings</h2>
+      <ul class="pts">
+        <li><p><b>Receipt branding</b> — name, TIN, address, and footer on every printed ticket.</p></li>
+        <li><p><b>Tax &amp; loyalty tuning</b> — VAT rate, senior/PWD percentage, earn and redeem rates.</p></li>
+        <li><p><b>Data portability</b> — one-click export and restore moves the whole business between devices.</p></li>
+        <li><p><b>Auto-lock</b> — the till protects itself after idle minutes you choose.</p></li>
+      </ul>
+    </div>
+    <div class="shot"><img src="screenshots/settings.png" alt="Settings screen" /></div>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section class="slide center" data-title="Try it">
+  <h1>Ready when <em>you are.</em></h1>
+  <p class="tagline">Installs in two minutes, keeps working with the internet off, and every screen you just saw is in this demo.</p>
+  <div class="close-grid">
+    <div class="cc"><b>Sign in</b> <code>admin@ashletrato.com</code><br/><code>letrato123</code></div>
+    <div class="cc"><b>Staff PINs</b> Simone <code>2468</code> · Maria <code>1357</code><br/>Jonas <code>1122</code> · Pia <code>8899</code></div>
+    <div class="cc"><b>Platforms</b> Android APK · Windows Setup<br/>iOS .ipa · Web app</div>
+  </div>
+</section>
+
+<div class="hud">
+  <div class="brand"><img src="icon.png" alt="" /><span>ASH LETRATO POS</span></div>
+  <span class="counter" id="counter">1 / 17</span>
+  <span class="keys">← → navigate · F fullscreen</span>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var slides = document.querySelectorAll('.slide');
+  var counter = document.getElementById('counter');
+  var prog = document.getElementById('prog');
+  var cur = 0;
+
+  function go(n) {
+    cur = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, i) { s.classList.toggle('on', i === cur); });
+    counter.textContent = (cur + 1) + ' / ' + slides.length;
+    prog.style.width = ((cur + 1) / slides.length * 100) + '%';
+    document.title = 'ASH LETRATO POS — ' + slides[cur].dataset.title;
+    if (history.replaceState) history.replaceState(null, '', '#' + (cur + 1));
+  }
+
+  document.getElementById('zone-l').addEventListener('click', function () { go(cur - 1); });
+  document.getElementById('zone-r').addEventListener('click', function () { go(cur + 1); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(cur + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(cur - 1); }
+    if (e.key === 'Home') go(0);
+    if (e.key === 'End') go(slides.length - 1);
+    if (e.key === 'f' || e.key === 'F') {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    }
+  });
+  var tx = null;
+  document.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (tx === null) return;
+    var dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) go(dx < 0 ? cur + 1 : cur - 1);
+    tx = null;
+  }, { passive: true });
+
+  var start = parseInt((location.hash || '').replace('#', ''), 10);
+  go(Number.isFinite(start) && start > 0 ? start - 1 : 0);
+})();
+</script>
+</body>
+</html>
