@@ -75,6 +75,25 @@
   .nav-zones > div { flex: 1; pointer-events: auto; cursor: pointer; }
   .counter { color: var(--faint); font-size: 12.5px; font-variant-numeric: tabular-nums; }
 
+  /* ---------- speaker notes ---------- */
+  .notes {
+    position: fixed; left: 0; right: 0; bottom: 46px; z-index: 20;
+    background: rgba(14,16,21,.96); backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line-2);
+    padding: 16px 24px 20px; transform: translateY(105%);
+    transition: transform .25s ease; max-height: 38vh; overflow-y: auto;
+  }
+  .notes.show { transform: none; }
+  .notes-in { max-width: 900px; margin: 0 auto; }
+  .notes .nh { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--fire); margin-bottom: 8px; }
+  .notes p { color: #C9CCD3; font-size: 14.5px; line-height: 1.65; margin-bottom: 8px; }
+  .notes p:last-child { margin-bottom: 0; }
+  .notes p em { color: var(--blue); font-style: italic; }
+  .notes .print-only { display: none; }
+  .slide-notes { display: none; }
+  .slide-notes h3 { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--fire); margin: 20px auto 8px; max-width: 900px; }
+  .slide-notes p { color: #C9CCD3; font-size: 14px; line-height: 1.65; margin-bottom: 7px; max-width: 900px; margin-left: auto; margin-right: auto; }
+
   @media (max-width: 900px) {
     .split { grid-template-columns: 1fr; gap: 18px; align-content: center; overflow-y: auto; }
     .shot { order: -1; }
@@ -83,8 +102,11 @@
   }
   @media print {
     body { overflow: visible; }
-    .slide { position: static; display: flex !important; page-break-after: always; min-height: 100vh; }
+    .slide { position: static; display: flex !important; page-break-inside: avoid; min-height: 60vh; }
     .hud, .nav-zones, .prog { display: none; }
+    .notes { position: static; transform: none; max-height: none; border-top: 1px solid var(--line-2); background: var(--card); backdrop-filter: none; page-break-inside: avoid; margin-bottom: 30px; }
+    .slide-notes { display: block; width: 100%; }
+    .slide.center .slide-notes { text-align: left; }
   }
 </style>
 </head>
@@ -351,25 +373,95 @@
   </div>
 </section>
 
+<div class="notes" id="notes"><div class="notes-in"><p class="nh">What to say</p><div id="notes-body"></div></div></div>
+
 <div class="hud">
   <div class="brand"><img src="icon.png" alt="" /><span>ASH LETRATO POS</span></div>
   <span class="counter" id="counter">1 / 17</span>
-  <span class="keys">← → navigate · F fullscreen</span>
+  <span class="keys">← → navigate · S notes · F fullscreen</span>
 </div>
 
 <script>
 (function () {
   'use strict';
+
+  /* ---------- talk track — what to say on each slide ---------- */
+  var NOTES = [
+    // 1 — Title
+    ['<p>Thanks for making time — I\'ll keep this practical. This is ASH LETRATO POS: the whole shop running on devices you already have — a tablet at the counter, a PC in the office, a phone in your pocket.</p>',
+     '<p>Everything you\'re about to see is the real working app, not mockups. And the big thing up front: it works completely offline. Brownout, spotty wifi — the till keeps selling.</p>',
+     '<p><em>Ask before moving on:</em> "Quick question before I dive in — how are you ringing up sales today, and what\'s the most annoying part of it?"</p>'],
+    // 2 — POS
+    ['<p>This is the register your staff will actually touch, a hundred times a day. Notice it\'s built for fingers, not a mouse — big tiles, big buttons.</p>',
+     '<p>A tarpaulin order: tap the service, type the width and height, price computes itself per square foot. Barcode items scan with the tablet camera — no scanner hardware to buy.</p>',
+     '<p>Cash, GCash, Maya, card — and senior/PWD discounts apply automatically and legally. Then when your staff walk away, the till locks itself and needs their PIN to reopen.</p>'],
+    // 3 — Dashboard
+    ['<p>This is what you check with your morning coffee. Today\'s sales so far, the week\'s trend line, what\'s actually selling, and what\'s about to run out of stock.</p>',
+     '<p>Everything here is live — ring a sale on the next screen and this chart moves. No exporting, no waiting for end-of-day.</p>'],
+    // 4 — Transactions
+    ['<p>Every sale ever made, searchable. Customer disputes a charge? Pull up the invoice and reshow the exact receipt in seconds.</p>',
+     '<p>And the important part for an owner: a cashier can\'t void or refund alone. It demands a supervisor PIN, and the record shows exactly who approved it — that\'s where register leakage gets stopped.</p>'],
+    // 5 — Products
+    ['<p>Sellable goods — mugs, shirts, totes — with real stock counts and photos. Each one can carry a barcode for camera scanning.</p>',
+     '<p>Products can also be wired to consume materials when they sell, so inventory updates itself. More on that in a minute.</p>'],
+    // 6 — Services
+    ['<p>This is where it\'s built for a print shop, not a generic store. Services price the way you actually bill — per square foot for tarpaulins and vinyl, per page for photocopying, per set for IDs.</p>',
+     '<p>Each service has a "recipe" — sell a 4×6 tarp and the vinyl and ink come off inventory automatically. You stop guessing how much material a job actually cost.</p>'],
+    // 7 — Production
+    ['<p>Back of shop. Every machine job gets a numbered ticket — who ran it, how many, how many were damaged.</p>',
+     '<p>Here\'s the accountability piece: staff log the machine\'s counter at shift open and close, and the app reconciles it against what was actually produced. If the machine punched 200 but only 180 got sold or logged — that gap shows up, not as a rumor, as a number.</p>'],
+    // 8 — Inventory
+    ['<p>Materials — vinyl, ink, boards, PVC — tracked per branch. Caloocan\'s stock is separate from Greenhills\'.</p>',
+     '<p>Moving stock between branches is a logged transfer. Doing a physical count? Enter what\'s on the shelf and it writes the correction itself. And every single movement — receive, consume, transfer, waste — is a permanent line item.</p>'],
+    // 9 — Customers
+    ['<p>Customers earn points on every peso and redeem them at the till — loyalty that actually brings people back.</p>',
+     '<p>Senior citizen and PWD discounts apply the legal rate automatically — your cashier can\'t get it wrong, and it\'s documented on the receipt for your records.</p>'],
+    // 10 — Promotions
+    ['<p>Run a promo without teaching anyone the math. Percent-off, peso-off vouchers, or buy-X-get-Y — with dates, minimum spend, and usage caps so it can\'t be abused.</p>',
+     '<p>Cashier types the code, discount applies itself, and you can see exactly how many times it was used.</p>'],
+    // 11 — Reports
+    ['<p>Where the numbers turn into decisions. Any period — today, a week, a custom range — compared against the period before it, so you see direction, not just totals.</p>',
+     '<p>Branch-by-branch breakdown shows which location earns and which coasts. Everything exports to Excel for your accountant, and the audit trail underneath logs every sensitive action with a name and timestamp.</p>'],
+    // 12 — Staff & Roles
+    ['<p>Four roles: owner, manager, cashier, handler. Each one only sees what their job needs — a cashier can\'t wander into payroll, a handler can\'t see the books.</p>',
+     '<p>Each staff login is bound to their branch — a Caloocan cashier literally cannot see Greenhills\' numbers. And PINs are throttled: five wrong attempts and that account locks out progressively.</p>'],
+    // 13 — HR & Payroll
+    ['<p>The same staff list that runs the register runs payroll — no second system, no double entry.</p>',
+     '<p>Staff clock in and out at the till. Payroll computes from actual attendance — monthly, daily, or hourly rates plus overtime — and a run goes draft, review, approve, paid with a name on every step.</p>'],
+    // 14 — Branches
+    ['<p>This is why it\'s not a single-store toy. Every branch gets its own logins, its own stock, its own ledger — and as the owner you flip between locations or see everything at once.</p>',
+     '<p>Open a fourth location? Add it here and it joins the system the same day — nothing to reinstall.</p>'],
+    // 15 — Settings
+    ['<p>Your business rules, not ours. Receipt header and TIN, VAT rate, discount percentages, loyalty earn rates, auto-lock timing.</p>',
+     '<p>And this matters for the future: one-click export and restore. Your data is yours — move it between devices, keep backups, or migrate it to a cloud service later without re-entering anything.</p>'],
+    // 16 — Closing
+    ['<p>That\'s the whole system — register to payroll, running offline, on three platforms.</p>',
+     '<p>You can try it today: owner login is on screen, or hand the tablet to a staff member and let them try their own PIN. Everything you saw is already live in the demo.</p>',
+     '<p><em>Close with:</em> "What would you want to see working in your own shop first — the register, or the production side? We can set it up and try it with a real order right now."</p>']
+  ];
+
   var slides = document.querySelectorAll('.slide');
   var counter = document.getElementById('counter');
   var prog = document.getElementById('prog');
+  var notesEl = document.getElementById('notes');
+  var notesBody = document.getElementById('notes-body');
   var cur = 0;
+
+  // Per-slide notes for the printed handout — hidden on screen.
+  slides.forEach(function (s, i) {
+    if (!NOTES[i]) return;
+    var d = document.createElement('div');
+    d.className = 'slide-notes';
+    d.innerHTML = '<h3>Presenter notes</h3>' + NOTES[i].join('');
+    s.appendChild(d);
+  });
 
   function go(n) {
     cur = Math.max(0, Math.min(slides.length - 1, n));
     slides.forEach(function (s, i) { s.classList.toggle('on', i === cur); });
     counter.textContent = (cur + 1) + ' / ' + slides.length;
     prog.style.width = ((cur + 1) / slides.length * 100) + '%';
+    notesBody.innerHTML = (NOTES[cur] || []).join('');
     document.title = 'ASH LETRATO POS — ' + slides[cur].dataset.title;
     if (history.replaceState) history.replaceState(null, '', '#' + (cur + 1));
   }
@@ -384,6 +476,9 @@
     if (e.key === 'f' || e.key === 'F') {
       if (document.fullscreenElement) document.exitFullscreen();
       else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    }
+    if (e.key === 's' || e.key === 'S' || e.key === 'n' || e.key === 'N') {
+      notesEl.classList.toggle('show');
     }
   });
   var tx = null;
