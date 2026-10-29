@@ -118,7 +118,7 @@
 <section class="slide center on" data-title="Title">
   <img class="logo-lg" src="icon.png" alt="ASH LETRATO logo" />
   <h1>ASH LETRATO <em>POS</em></h1>
-  <p class="tagline">A complete point-of-sale system for a digital printing business — register, inventory, production, staff, and payroll. Runs fully offline on the devices you already own.</p>
+  <p class="tagline">A complete point-of-sale system for a digital printing business — register, inventory, production, and staff. Runs fully offline on the devices you already own.</p>
   <div class="meta-row">
     <span class="pill"><b>15</b> modules</span>
     <span class="pill"><b>3</b> platforms — Android · Windows · iOS</span>
@@ -295,23 +295,6 @@
   </div>
 </section>
 
-<!-- ============ HR ============ -->
-<section class="slide" data-title="HR & Payroll">
-  <div class="split">
-    <div>
-      <p class="k">People, paid right</p>
-      <h2>HR &amp; Payroll</h2>
-      <ul class="pts">
-        <li><p><b>Attendance built in</b> — clock-ins, clock-outs, and leave days recorded per staff member and approved from HR.</p></li>
-        <li><p><b>Payroll from real hours</b> — monthly, daily, or hourly rates plus overtime produce payslips automatically.</p></li>
-        <li><p><b>Approval workflow</b> — draft → review → approve → paid; every step is audited.</p></li>
-        <li><p><b>No second system</b> — the same staff list that runs the register runs payroll.</p></li>
-      </ul>
-    </div>
-    <div class="shot"><img src="screenshots/hr.png" alt="HR & Payroll screen" /></div>
-  </div>
-</section>
-
 <!-- ============ BRANCHES ============ -->
 <section class="slide" data-title="Branches">
   <div class="split">
@@ -372,7 +355,7 @@
   var NOTES = [
     // 1 — Title
     ['<p>Thanks for making time — I\'ll keep this practical and you\'ll see the real working app the whole way through, not slides of mockups.</p>',
-     '<p>This is ASH LETRATO POS — point of sale, production tracking, inventory, staff, payroll and reports in one system. It runs on what you already own: a tablet at the counter, a PC in the office, a phone in your pocket. Android app, Windows installer, iPhone/iPad app — same system, same data format.</p>',
+     '<p>This is ASH LETRATO POS — point of sale, production tracking, inventory, staff and reports in one system. It runs on what you already own: a tablet at the counter, a PC in the office, a phone in your pocket. Android app, Windows installer, iPhone/iPad app — same system, same data format.</p>',
      '<p>Three things to hold onto through the demo: <strong>it works fully offline</strong> — brownout or dead wifi, the till keeps selling. <strong>It\'s built for a print shop</strong> — services priced per square foot, per page, per set, not just canned goods. And <strong>every action has a name on it</strong> — nothing happens anonymously.</p>',
      '<p><em>Ask before moving on:</em> "Quick one before I dive in — how are you ringing up sales today, and what\'s the most annoying part of it?" — then refer back to their answer at the relevant slide.</p>'],
     // 2 — POS
@@ -415,13 +398,9 @@
      '<p>Breakdowns by branch show which location earns and which coasts; top products and services show what to push; payment-method totals show how customers actually pay.</p>',
      '<p>Everything exports to Excel in one click — that\'s what your accountant gets at month-end, no re-typing. And underneath the charts sits the audit log: every void, refund, discount override, price change and PIN-verified action with a name and timestamp. When something looks off, this is where the answer lives.</p>'],
     // 12 — Staff & Roles
-    ['<p>Four roles, and they\'re enforced — not just hidden menus. The owner sees everything. A manager runs the floor but can\'t touch payroll or system settings. A cashier gets the register, transactions and customers — nothing else. A handler gets the register and production — for staff who run machines but don\'t need the books.</p>',
+    ['<p>Four roles, and they\'re enforced — not just hidden menus. The owner sees everything. A manager runs the floor but can\'t touch staff accounts or system settings. A cashier gets the register, transactions and customers — nothing else. A handler gets the register and production — for staff who run machines but don\'t need the books.</p>',
      '<p>Here\'s the key for multi-branch owners: every staff login is bound to their branch. A Caloocan cashier literally cannot see Greenhills\' sales — typing the URL doesn\'t work, the route itself refuses them. Only the owner flips between locations.</p>',
      '<p>Security details: PINs are brute-force protected — five wrong attempts locks the account progressively up to fifteen minutes, and that lockout survives closing and reopening the app. Supervisory actions like voids and refunds always demand a supervisor\'s own PIN, on the record.</p>'],
-    // 13 — HR & Payroll
-    ['<p>The same staff list that runs the register runs payroll — there\'s no second system and nothing gets entered twice.</p>',
-     '<p>Attendance is recorded per person — clock-ins, clock-outs and approved leave — and payroll is computed from those records. Payroll supports monthly, daily and hourly rates plus overtime, and a pay run moves through a real workflow: draft, review, approve, mark paid — with a name on every step, so "who approved this payslip" is never a question.</p>',
-     '<p><em>If they use an external payroll provider:</em> the attendance and computed figures still export cleanly — this feeds the accountant rather than replacing them.</p>'],
     // 14 — Branches
     ['<p>This is what makes it a real business system rather than a single-store toy. Every branch gets its own logins, its own inventory, its own sales ledger and its own reports — fully isolated day to day.</p>',
      '<p>As the owner, your sidebar has a branch switcher: flip to Caloocan and every screen — dashboard, sales, stock, reports — shows Caloocan\'s world; flip to "All branches" and you see the combined picture.</p>',
@@ -431,7 +410,7 @@
      '<p>The part that matters for your future: one click exports everything — products, customers, full sales history, staff, settings — to a single file. Restore it on another device and that device is up and running. Your data is yours; there\'s no lock-in, and when you\'re ready to grow into a cloud setup later, the data moves with you instead of starting over.</p>',
      '<p><em>If they ask "where does my data live?"</em> — on the device itself, fully private to your shop, with exports you control. Nothing is sent anywhere.</p>'],
     // 16 — Closing
-    ['<p>That\'s the whole loop: register, production floor, stockroom, back office and payroll — one system, working offline, on devices you already own.</p>',
+    ['<p>That\'s the whole loop: register, production floor, stockroom and back office — one system, working offline, on devices you already own.</p>',
      '<p>It\'s live right now — owner login on screen, or hand the tablet over and let a staff member try their own PIN. Everything you saw today is the actual running system.</p>',
      '<p>On practicalities: it installs in minutes on a tablet or PC, needs no special hardware — the camera is the barcode scanner — and updates roll out to every device automatically as the system improves.</p>',
      '<p><em>Close with:</em> "Which part would you want running in your shop first — the register or the production tracking? We can set it up with a real order while we\'re here." — then stay quiet and let them answer.</p>']
