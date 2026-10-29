@@ -213,9 +213,9 @@
 <header id="top">
   <div class="wrap hero">
     <div>
-      <p class="kicker">Free demo build · v1.0</p>
+      <p class="kicker">Free demo build</p>
       <h1>Your whole shop,<br/>in <em>one till.</em></h1>
-      <p class="sub">Point of sale, inventory, production tickets, and staff reports — running fully offline on your devices. No internet, no subscription, no waiting.</p>
+      <p class="sub">Point of sale, inventory, staff reports, and optional production tickets — running fully offline on your devices. No internet, no subscription, no waiting.</p>
       <div class="cta-row">
         <a class="btn" id="hero-dl" href="https://github.com/las-qwerty/ash-letrato-pos/releases/download/android-latest/ASH-LETRATO-POS.apk">
           <svg viewBox="0 0 24 24"><path d="M12 3v10.6l3.3-3.3 1.4 1.4-5.7 5.7-5.7-5.7 1.4-1.4L11 13.6V3zM5 19h14v2H5z"/></svg>
@@ -272,7 +272,7 @@
           <svg viewBox="0 0 24 24"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm6 18.5a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5zM8 4.5h8V17H8z"/></svg>
           <h3>Android</h3><span class="rec">for your device</span>
         </div>
-        <p class="meta"><b>ASH-LETRATO-POS.apk</b><br/>Android 8.0+ · phones &amp; tablets<br/>Camera barcode scanning built in<br/><span class="size">35 MB · updates itself over the air</span></p>
+        <p class="meta"><b>ASH-LETRATO-POS.apk</b><br/>Android 7.0+ · phones &amp; tablets<br/>Camera barcode scanning built in<br/><span class="size">35 MB · updates itself over the air</span></p>
         <a class="btn" href="https://github.com/las-qwerty/ash-letrato-pos/releases/download/android-latest/ASH-LETRATO-POS.apk">
           <svg viewBox="0 0 24 24"><path d="M12 3v10.6l3.3-3.3 1.4 1.4-5.7 5.7-5.7-5.7 1.4-1.4L11 13.6V3zM5 19h14v2H5z"/></svg>
           Download APK
@@ -308,7 +308,7 @@
     <div class="cred-row reveal">
       <span class="k">Owner</span> <code>admin@ashletrato.com</code><button class="copy" data-copy="admin@ashletrato.com">copy</button>
       <span class="k">Password</span> <code>letrato123</code><button class="copy" data-copy="letrato123">copy</button>
-      <span class="k">Staff PINs</span> <code>2468 · 1357 · 1122</code>
+      <span class="k">Staff PINs</span> <code>2468 · 1357 · 1122 · 8899</code>
       <span class="k">Seed data</span> <a href="downloads/ash-letrato-pos-backup.json" download>Backup.json</a>
     </div>
   </section>
@@ -362,9 +362,9 @@
     </div>
     <ul class="feats reveal">
       <li><b>Register</b>Touch POS, barcode scanning, area pricing, discounts, receipts, voids &amp; refunds</li>
-      <li><b>Receipt printing</b>Auto-print after every sale, selectable 58/72/80&nbsp;mm paper widths, silent kiosk printing on Windows</li>
+      <li><b>Receipt printing</b>Auto-print after every sale, selectable 58/72/80&nbsp;mm paper widths, printing to your default printer on Windows</li>
       <li><b>Inventory</b>Branches, transfers, stock counts, movement ledger, low-stock alerts</li>
-      <li><b>Production</b>Job tickets, machine counters, punching reconciliation, waste tracking</li>
+      <li><b>Production</b>Optional module, turned on in Settings: job tickets, machine counters, punching reconciliation, waste tracking</li>
       <li><b>Reports</b>Sales charts, period comparison, Excel exports, audit trail</li>
       <li><b>Offline first</b>No internet required — cloud sync can be added later</li>
     </ul>
@@ -451,11 +451,11 @@
 
   /* ---------- receipt ---------- */
   var LINES = [
-    ['A4 Photocopy x20', '₱60.00'],
-    ['PVC ID - Employee', '₱150.00'],
-    ['Lamination - A4', '₱40.00'],
-    ['Notary Service', '₱100.00'],
-    ['Notary fee', '₱1.00']
+    ['Photocopy — Regular x20', '₱40.00'],
+    ["Gov't — NBI", '₱100.00'],
+    ['Computer — Typeset (Resume) x2', '₱500.00'],
+    ['Office — Bond Short (per ream)', '₱280.00'],
+    ['Office — Fastener (per piece) x10', '₱20.00']
   ];
   var linesEl = document.getElementById('r-lines');
   var totalEl = document.getElementById('r-total');
@@ -511,7 +511,7 @@
     ['dashboard', 'Dashboard', 'Live sales chart, top products, low stock — the morning pulse check'],
     ['sales', 'Transactions', 'Every sale, void and refund with receipts and an audit trail'],
     ['products', 'Products', 'Sellable goods with stock counts, barcodes, and category grouping'],
-    ['services', 'Services', 'Area-priced print work — tarpaulins, vinyl, blueprints'],
+    ['services', 'Services', "Priced per page, per ream, and per set — photocopy, computer printing, gov't forms"],
     ['production', 'Production', 'Job tickets, machine counters, and end-of-shift reconciliation'],
     ['inventory', 'Inventory', 'Per-branch stock, transfers, counts, and a movement ledger'],
     ['customers', 'Customers', 'Loyalty tiers, points, senior/PWD discounts, purchase history'],
